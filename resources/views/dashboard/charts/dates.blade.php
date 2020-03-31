@@ -10,44 +10,36 @@
            ['Action', 'Llamadas'],
            <?php
            use Carbon\Carbon;
-          ///Array Auxiliar para impresion de grafica
+           //Array Auxiliar para impresion de grafica
            $f_print = array(); 
-
-            ///Array solo fechas
+           //Array solo fechas
            $sbt_dates = array();
            foreach($dates as $sbt){
-            array_push($sbt_dates, substr($sbt,0,10));
-          }
-
-          ///Filtro y me traigo fechas unicas
-          $u_dates = array_unique($sbt_dates);
-          
-            ///Inicia Iteracion por gechas unicas 
-          foreach($u_dates as $u){
-           //Array aux para guardar  fechas para su conteo
-            $f_count = array();
-            //Tomamos todos las fecha  e iniicamos con las comparaciones
-            foreach($dates as $d){
-             $f = Carbon::create($d)->isoFormat('YYYY-MM-DD');
-              if($u==$f){
-                   array_push($f_count, $f);
-              }else{}
+             array_push($sbt_dates, substr($sbt,0,10));
+           }            
+           //Filtro y me traigo fechas unicas
+           $u_dates = array_unique($sbt_dates);          
+           //Inicia Iteracion por gechas unicas 
+           foreach($u_dates as $u){
+           //Array aux para guardar fechas para su conteo
+           $f_count = array();
+           //Tomamos todos las fecha e iniciamos con las comparaciones
+           foreach($dates as $d){
+           $f = Carbon::create($d)->isoFormat('YYYY-MM-DD');
+           if($u==$f){
+             array_push($f_count, $f);
+           }else{}
            }
            array_push($f_print, $f_count);
-          }
-             /// Iteracion para hacer la impresion dinamica
-          foreach($f_print as $singlef){
-          
-            if($singlef == end($f_print)){
-
-                 print "['$singlef[0]', ".count($singlef)."]";
-                
-                }else{
-                  print "['$singlef[0]', ".count($singlef)."],";
-
-                }
-        }
-          
+           }
+           //Iteracion para hacer la impresion dinamica
+           foreach($f_print as $singlef){
+             if($singlef == end($f_print)){
+               print "['$singlef[0]', ".count($singlef)."]";              
+             }else{
+               print "['$singlef[0]', ".count($singlef)."],";
+             }
+           }          
            ?>        
         ]);
 
@@ -59,7 +51,7 @@
           backgroundColor: {fill:"none"},
           axisTitlesPosition: "none",
           legend: {position: 'none'},
-          chartArea: {width: '80%', height: '80%', backgroundColor:{fill:"none"}},
+          chartArea: {width: '95%', height: '80%', backgroundColor:{fill:"none"}},
           colors: ["#3333FF"],
           lineWidth: 8,
           pointSize: 15,
@@ -77,9 +69,8 @@
         chart.draw(data, opciones);
       }
     </script>
-    <!--?php echo("Valores a comparar  ".$valorprint ." : " .$f   ." : " ); ?-->
   </head>
   <body>
-    <div id="performance"></div>
+    <div class="pl-6" id="performance"></div>
   </body>
 </html>

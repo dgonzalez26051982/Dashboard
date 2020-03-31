@@ -22,6 +22,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/panel', 'CallHistoryController@panel')->name('panel');
 Route::post('/panel', 'CallHistoryController@dates')->name('panel');
 
+Route::get('/tecAdvisors', 'CallHistoryController@tecAdvisors')->name('tecAdvisors');
+
 Route::get('/conversations', 'CallHistoryController@index')->name('conversations');
 
 Route::get('/history', 'CallHistoryController@search')->name('history');
@@ -29,8 +31,3 @@ Route::post('/history', 'CallHistoryController@show')->name('history');
 
 Route::get('/consulta', 'CallHistoryController@consulta')->name('consulta');
 Route::post('/consulta', 'CallHistoryController@consulta')->name('consulta');
-
-
-/////////////
-Route::get('/consulta1', 'CallHistoryController@consulta1')->name('consulta1');
-Route::post('/consulta1', 'CallHistoryController@filter')->name('consulta1');

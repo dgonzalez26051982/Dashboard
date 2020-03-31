@@ -17,7 +17,7 @@
             $datosPromocion = array();            
 
             for($i=0; $i<count($actions); $i++){
-            if($actions[$i]=='UsuarioConsultaSaldo'){
+            if($actions[$i]=='saldo'){
                 array_push($datosSaldo, $actions[$i]);  
             }                    
             }
@@ -35,7 +35,7 @@
             }
 
             for($i=0; $i<count($actions); $i++){
-            if($actions[$i]=='Factura'){
+            if($actions[$i]=='factura'){
                 array_push($datosFactura, $actions[$i]);  
             }                    
             }

@@ -6,11 +6,13 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">History</div>
+
                 <div class="card-body">
                     <?php $no=1; ?>
                     @foreach($sessions as $session)                    
                         <button class="btn btn-primary btn-block" data-toggle="collapse" data-target="#item<?= $no ?>">Conversación #{{ $no }}</button>
                         <div id="item<?= $no ?>" class="collapse">
+
                             <?php $intents = $calls->where('session',$session) ?>
                             <table class="col-12">
                             <thead class="table-primary">
@@ -18,7 +20,8 @@
                                     <th class="p-1">Usuario</th>
                                     <th class="p-1 text-center">Bot</th>
                                 </tr>                       
-                            </thead>                        
+                            </thead>
+                        
                             <tbody class="list">
                                 @foreach($intents as $r)
                                 <tr>

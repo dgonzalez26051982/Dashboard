@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CallsExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use App\Call;
 use Carbon\Carbon;
@@ -55,7 +58,6 @@ class CallHistoryController extends Controller
         $date = Carbon::now('America/Mexico_City');
         $subdate = Carbon::now('America/Mexico_City');
         $yesterday = new Carbon('yesterday');
-
         $dates = Call::pluck('creation_date');
         $actions = Call::pluck('queryResult.action');
         $e1 = Call::where('queryResult.action',"UsuarioPideConsultarSaldo.UsuarioPideConsultarSaldo-custom")->pluck('session');
@@ -67,7 +69,7 @@ class CallHistoryController extends Controller
         $facebook = Call::where('originalDetectIntentRequest.source.source',"facebook")->pluck('session')->unique()->count();
         $whatsapp = Call::where('originalDetectIntentRequest.source.source',"twilio")->pluck('session')->unique()->count();
         $telegram = Call::where('originalDetectIntentRequest.source.source',"telegram")->pluck('session')->unique()->count();
-        $web = count($calls->pluck('session')->unique())-$facebook-$whatsapp-$telegram;        
+        $web = count($calls->pluck('session')->unique())-$facebook-$whatsapp-$telegram;
         $to = request('to');
         $from = request('from');
         if($to!=null && $from!=null) {
@@ -76,22 +78,29 @@ class CallHistoryController extends Controller
             $dates = Call::whereBetween('creation_date', [$to, $from])->pluck('creation_date');
         };
         return view('dashboard.panel', compact('calls', 'today', 'date', 'subdate', 'yesterday', 'dates', 'actions', 'et', 'facebook', 'whatsapp', 'telegram', 'web'));
-    }
+    }    
 
     public function consulta(){
+        // $fi = collect();
+        // $ff = collect();
+        // $intents = collect();
         $calls = collect();
+
         $account = request('account');
         if($account==null) {
-            $calls = Call::all()->sortByDesc('creation_date');
+            $calls = Call::all()->sortByDesc('creation_date');            
         };
         if($account!=null) {            
             $sessions = Call::where('customerData.account',$account)->orderBy('creation_date','desc')->pluck('session')->unique();
             foreach($sessions as $session) {
                 $conversation = Call::where('session',$session)->get();
                 $calls = $calls->concat($conversation);
+                $fi = $conversation->first();
+                $ff = $conversation->last();
+                $conversation = $conversation->pluck('queryResult.action');
+                $calls = Call::where('customerData.account',$account)->get();
             };
         };
-
         $canal = request('canal');
         if($canal!=null) {
             switch($canal) {
@@ -109,12 +118,11 @@ class CallHistoryController extends Controller
                 break;
             };
         };
-
         $action = request('action');
         if($action!=null) {
             switch($action) {
                 case "Saldo":
-                    $calls = $calls->where('queryResult.action',"UsuarioConsultaSaldo");
+                    $calls = $calls->where('queryResult.action',"saldo");
                 break;
                 case "Plan":
                     $calls = $calls->where('queryResult.action',"plan");                
@@ -123,14 +131,13 @@ class CallHistoryController extends Controller
                     $calls = $calls->where('queryResult.action',"paquete");
                 break;
                 case "Factura":
-                    $calls = $calls->where('queryResult.action',"Factura");
+                    $calls = $calls->where('queryResult.action',"factura");
                 break;
                 case "Promoción":
                     $calls = $calls->where('queryResult.action',"promocion");
                 break;
             };
         };
-
         $to = request('to');
         $from = request('from');
         if($to!=null && $from!=null) {
@@ -138,33 +145,20 @@ class CallHistoryController extends Controller
             $from = "$from 23:59:59";
             $calls = $calls->whereBetween('creation_date', [$to, $from]);
         };        
-
-        return view('dashboard.consulta', compact('calls'));
+        $export = request('excel');
+        if($export!=null) {
+            return Excel::download(new CallsExport, 'reporte.xlsx');
+        };
+        $export = request('pdf');
+        if($export!=null) {
+            $pdf = PDF::loadView('dashboard.consulta.table', compact('calls'));
+            $pdf->setPaper('a4','landscape');
+            return $pdf->download('reporte.pdf');
+        };        
+        return view('dashboard.consulta.header', compact('calls'));
     }
 
-
-    // Sahid
-    public function consulta1(){
-        $calls = Call::all()->sortByDesc('creation_date') ;
-        return view('dashboard.consulta1', compact('calls'));
-    }
-
-    public function filter(){
-        $axion = request('axion');
-        $canal = request('canal');
-        $palabra = request('palabra');
-        if($axion != '') {
-            $calls = Call::all()->where('queryResult.action',$axion)->sortByDesc('creation_date');
-        }
-        elseif($canal != '') {
-            $calls = Call::all()->where('originalDetectIntentRequest.source.source',$canal)->sortByDesc('creation_date');
-        }
-        elseif($palabra != '') {
-            $calls = Call::all()->where('queryResult.queryText',$palabra)->sortByDesc('creation_date');
-        }
-        else {
-            $calls = Call::all()->sortByDesc('creation_date') ;
-        }
-        return view('dashboard.consulta1', compact('calls'));
+    public function tecAdvisors(){
+        return view('dashboard.tecAdvisors');
     }
 }

@@ -50,6 +50,9 @@
                                 <a class="nav-link" href="{{ route('panel') }}">Dashboard</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" href="{{ route('tecAdvisors') }}">TecAdvisors</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="{{ route('conversations') }}">Log</a>
                             </li>
                             <li class="nav-item">
@@ -57,9 +60,6 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('consulta') }}">Consulta</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('consulta1') }}">Consulta1</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
