@@ -8,16 +8,19 @@ use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use App\Call;
 use Carbon\Carbon;
+use App\Role;
 
 class CallHistoryController extends Controller
 {
     public function index(){
         $calls = Call::all()->sortByDesc('creation_date');
-        return view('dashboard.conversations', compact('calls'));
+        $roles = Role::all();
+        return view('dashboard.conversations', compact('calls', 'roles'));
     }
 
     public function search(){
-        return view('dashboard.history');
+        $roles = Role::all();
+        return view('dashboard.history', compact('roles'));
     }
 
     public function show(){
@@ -28,7 +31,8 @@ class CallHistoryController extends Controller
             $conversation = Call::where('session',$session)->get();
             $calls = $calls->concat($conversation);
         }
-        return view('dashboard.sessions', compact('sessions', 'calls'));
+        $roles = Role::all();
+        return view('dashboard.sessions', compact('sessions', 'calls', 'roles'));
     }
 
     public function panel(){
@@ -49,7 +53,8 @@ class CallHistoryController extends Controller
         $whatsapp = Call::where('originalDetectIntentRequest.source.source',"twilio")->pluck('session')->unique()->count();
         $telegram = Call::where('originalDetectIntentRequest.source.source',"telegram")->pluck('session')->unique()->count();
         $web = count($calls->pluck('session')->unique())-$facebook-$whatsapp-$telegram;
-        return view('dashboard.panel', compact('calls', 'today', 'date', 'subdate', 'yesterday', 'dates', 'actions', 'et', 'facebook', 'whatsapp', 'telegram', 'web'));
+        $roles = Role::all();
+        return view('dashboard.panel', compact('calls', 'today', 'date', 'subdate', 'yesterday', 'dates', 'actions', 'et', 'facebook', 'whatsapp', 'telegram', 'web', 'roles'));
     }
 
     public function dates(){
@@ -77,13 +82,11 @@ class CallHistoryController extends Controller
             $from = "$from 23:59:59";
             $dates = Call::whereBetween('creation_date', [$to, $from])->pluck('creation_date');
         };
-        return view('dashboard.panel', compact('calls', 'today', 'date', 'subdate', 'yesterday', 'dates', 'actions', 'et', 'facebook', 'whatsapp', 'telegram', 'web'));
+        $roles = Role::all();
+        return view('dashboard.panel', compact('calls', 'today', 'date', 'subdate', 'yesterday', 'dates', 'actions', 'et', 'facebook', 'whatsapp', 'telegram', 'web', 'roles'));
     }    
 
     public function consulta(){
-        // $fi = collect();
-        // $ff = collect();
-        // $intents = collect();
         $calls = collect();
 
         $account = request('account');
@@ -154,11 +157,23 @@ class CallHistoryController extends Controller
             $pdf = PDF::loadView('dashboard.consulta.table', compact('calls'));
             $pdf->setPaper('a4','landscape');
             return $pdf->download('reporte.pdf');
-        };        
-        return view('dashboard.consulta.header', compact('calls'));
+        };
+        $roles = Role::all();        
+        return view('dashboard.consulta.header', compact('calls', 'roles'));
     }
 
     public function tecAdvisors(){
-        return view('dashboard.tecAdvisors');
+        $roles = Role::all();
+        return view('dashboard.tecAdvisors', compact('roles'));
+    }
+
+    public function views(){
+        $roles = Role::all();
+        return view('layouts.app', compact('roles'));
+    }
+    
+    public function roles(){
+        $roles = Role::pluck('role');
+        return view('auth.register', compact('roles'));
     }
 }

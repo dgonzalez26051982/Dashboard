@@ -18,6 +18,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'CallHistoryController@views')->name('home');
 
 Route::get('/panel', 'CallHistoryController@panel')->name('panel');
 Route::post('/panel', 'CallHistoryController@dates')->name('panel');
@@ -31,3 +32,5 @@ Route::post('/history', 'CallHistoryController@show')->name('history');
 
 Route::get('/consulta', 'CallHistoryController@consulta')->name('consulta');
 Route::post('/consulta', 'CallHistoryController@consulta')->name('consulta');
+
+Route::get('/register', 'CallHistoryController@roles')->name('register');

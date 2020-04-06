@@ -23,7 +23,7 @@ class User extends Eloquent implements AuthenticatableContract, CanResetPassword
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'role',
     ];
 
     /**
