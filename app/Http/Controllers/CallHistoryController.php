@@ -167,6 +167,11 @@ class CallHistoryController extends Controller
         return view('dashboard.tecAdvisors', compact('roles'));
     }
 
+    public function chat(){
+        $roles = Role::all();
+        return view('dashboard.chat', compact('roles'));
+    }
+
     public function views(){
         $roles = Role::all();
         return view('layouts.app', compact('roles'));

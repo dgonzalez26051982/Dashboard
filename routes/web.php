@@ -38,3 +38,6 @@ Route::get('/register', 'CallHistoryController@register')->name('register');
 Route::get('/admin', 'CallHistoryController@admin')->name('admin');
 Route::post('/create', 'CallHistoryController@create')->name('create');
 Route::post('/admin', 'CallHistoryController@role')->name('admin');
+
+Route::get('/chat', 'CallHistoryController@chat')->name('chat');
+
