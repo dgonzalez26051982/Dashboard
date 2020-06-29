@@ -33,4 +33,8 @@ Route::post('/history', 'CallHistoryController@show')->name('history');
 Route::get('/consulta', 'CallHistoryController@consulta')->name('consulta');
 Route::post('/consulta', 'CallHistoryController@consulta')->name('consulta');
 
-Route::get('/register', 'CallHistoryController@roles')->name('register');
+Route::get('/register', 'CallHistoryController@register')->name('register');
+
+Route::get('/admin', 'CallHistoryController@admin')->name('admin');
+Route::post('/create', 'CallHistoryController@create')->name('create');
+Route::post('/admin', 'CallHistoryController@role')->name('admin');

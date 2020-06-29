@@ -172,8 +172,64 @@ class CallHistoryController extends Controller
         return view('layouts.app', compact('roles'));
     }
     
-    public function roles(){
+    public function register(){
         $roles = Role::pluck('role');
         return view('auth.register', compact('roles'));
+    }
+
+    public function admin(){
+        $roles = Role::all();
+        $r = Role::pluck('role');
+        return view('dashboard.roles.admin', compact('roles', 'r'));
+    }
+
+    public function create(){
+        $roles = Role::all();
+        return view('dashboard.roles.create', compact('roles'));
+    }
+
+    public function role(){        
+        if(request('Nombre')!=null) {
+            $Nombre = request('Nombre');
+            $exist = Role::where('role',$Nombre)->exists();
+            if($exist!=false) {
+                $roles = Role::all();
+                return view('dashboard.roles.create', compact('roles','exist'));
+            }
+            else {
+                $role=new Role;
+                $role->role=$Nombre;
+                $collection = collect([]);
+
+                if(request('Dashboard')!=null) {
+                    $Dashboard = request('Dashboard');         
+                    $collection = $collection->put('panel', $Dashboard);
+                }
+                if(request('TecAdvisors')!=null) {
+                    $TecAdvisors = request('TecAdvisors');
+                    $collection = $collection->put('tecAdvisors', $TecAdvisors);
+                }
+                if(request('Log')!=null) {
+                    $Log = request('Log');
+                    $collection = $collection->put('conversations', $Log);
+                }
+                if(request('Historial')!=null) {
+                    $Historial = request('Historial');
+                    $collection = $collection->put('history', $Historial);
+                }
+                if(request('Consulta')!=null) {
+                    $Consulta = request('Consulta');
+                    $collection = $collection->put('consulta', $Consulta);
+                }
+                if(request('Administración')!=null) {
+                    $Administración = request('Administración');
+                    $collection = $collection->put('admin', $Administración);
+                }
+                $role->views=$collection->toArray();
+                $role->save();
+            }
+        }
+        $roles = Role::all();
+        return view('dashboard.roles.admin', compact('roles'));
     }
 }

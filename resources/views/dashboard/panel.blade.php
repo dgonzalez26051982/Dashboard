@@ -100,5 +100,14 @@
                 </div>
             </div>        
         </div>
-    </div>        
+    </div>
+
+    <ul class="nav nav-pills nav-pills-circle" id="tabs_2" role="tablist">
+  
+  <li class="nav-item">
+    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#tabs_2_2" role="tab" aria-controls="profile" aria-selected="false">
+      <span class="nav-link-icon d-block"><i class="fa fa-comments" aria-hidden="true"></i></span>
+    </a>
+  </li>
+</ul>        
 @endsection
